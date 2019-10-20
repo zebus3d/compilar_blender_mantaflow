@@ -1,1 +1,2 @@
-# compilar_blender_mantaflow
+# Mini howto
+Como compilar blender/mantaflow en linux (debian based distros).
