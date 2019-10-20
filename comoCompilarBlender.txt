@@ -1,0 +1,72 @@
+# Dependencias minimas (solo es necesario la primera vez):
+$ sudo apt install git build-essential cmake-qt-gui
+
+$ mkdir ~/blender-git
+$ cd ~/blender-git
+$ git clone https://git.blender.org/blender.git
+$ cd blender
+$ git submodule update --init --recursive
+$ git submodule foreach git checkout master
+$ git submodule foreach git pull --rebase origin master
+
+# Dependencias (solo es necesario la primera vez):
+$ cd ~/blender-git/blender/build_files/build_environment/
+# la primera vez que ejecutemos este script tardara bastante:
+$ ./install_deps.sh
+
+# Compilar blender 2.8X normal:
+$ cd ~/blender-git
+$ mkdir 2.8X
+$ cd 2.8X
+
+# con gui (lo explico mas afondo en la compilación con mantaflow):
+$ cmake-gui
+
+# por terminal:
+$ cmake ../blender
+
+# Compilando:
+# numero de hilos tengo un dual core con 4 hilos así que le digo que use 4 hilos:
+$ make -j4
+$ make -j4 install
+
+# Compilar mantaflow:
+$ cd ~/blender-git/blender
+# Vamos a cambiar a la rama mantaflow:
+$ git branch
+$ git checkout fluid-mantaflow
+$ git branch
+$ cd ~/blender-git/
+$ mkdir fluid-mantaflow
+$ cd fluid-mantaflow
+
+opcion 1 gui:
+$ cmake-gui
+elegir en source la carpeta de ~/blender-git/blender
+elegir en destino la carpeta (si no lo estuviera ya) ~/blender-git/fluid-mantaflow
+le damos a configure para ver las opciones disponibles
+si sale un dialogo de CMakeSetup le decimos Unix Makefiles y le decimos use default native compilers, finish.
+seleccionar las opciones que queramos y desactivamos WITH_MANTA_OMP para que use tbb
+le damos a configure.
+Si no hay errores y se pone en blanco y pone configure done, entonces damos a Generate y si pone generate done ya podemos cerrar el gui.
+
+opcion 2 terminal:
+$ cmake -D WITH_CXX11=ON -D GUI=OFF -D WITH_FFTW3=ON -D WITH_MOD_OCEANSIM=ON -D WITH_ALEMBIC=ON -D WITH_OPENMP=OFF -D WITH_MANTA_OMP=OFF ../blender
+
+# Compilando:
+# numero de hilos tengo un dual core con 4 hilos así que le digo que use 4 hilos:
+$ make -j4
+$ make -j4 install
+
+
+# para ver todas con cmake-gui o para ver todas por consola: 
+cd fluid-mantaflow 
+cmake -LAH
+List non-advanced cached variables.
+List cache variables will run CMake and list all the variables from the CMake cache that are not marked as INTERNAL or ADVANCED. This will effectively display current CMake settings [...].
+If A is specified, then it will display also advanced variables.
+If H is specified, it will also display help for each variable.
+
+Actualizar las fuentes de blender:
+$ cd ~/blender-git/blender/
+$ make update
